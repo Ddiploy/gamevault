@@ -2,11 +2,53 @@
 include("config/db.php");
 include("includes/header.php");
 
-$sql = "SELECT * FROM games ORDER BY RAND()";
-$result = $conn->query($sql);
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+$genre = isset($_GET['genre']) ? trim($_GET['genre']) : '';
+
+$sql = "SELECT * FROM games WHERE 1=1";
+$params = [];
+$types = "";
+
+if (!empty($search)) {
+    $sql .= " AND title LIKE ?";
+    $params[] = "%" . $search . "%";
+    $types .= "s";
+}
+
+if (!empty($genre)) {
+    $sql .= " AND genre = ?";
+    $params[] = $genre;
+    $types .= "s";
+}
+
+$sql .= " ORDER BY RAND()";
+
+$stmt = $conn->prepare($sql);
+
+if (!empty($params)) {
+    $stmt->bind_param($types, ...$params);
+}
+
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 
 <h2>Featured Games</h2>
+
+<form method="GET" action="index.php" class="search-form">
+    <input type="text" name="search" placeholder="Search for a game..." value="<?php echo htmlspecialchars($search); ?>">
+
+    <select name="genre">
+        <option value="">All Genres</option>
+        <option value="Action" <?php echo ($genre == 'Action') ? 'selected' : ''; ?>>Action</option>
+        <option value="RPG" <?php echo ($genre == 'RPG') ? 'selected' : ''; ?>>RPG</option>
+        <option value="Sports" <?php echo ($genre == 'Sports') ? 'selected' : ''; ?>>Sports</option>
+        <option value="Horror" <?php echo ($genre == 'Horror') ? 'selected' : ''; ?>>Horror</option>
+        <option value="Strategy" <?php echo ($genre == 'Strategy') ? 'selected' : ''; ?>>Strategy</option>
+    </select>
+
+    <button type="submit">Search</button>
+</form>
 
 <div class="game-grid">
     <?php if ($result->num_rows > 0): ?>

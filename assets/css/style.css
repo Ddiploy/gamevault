@@ -267,3 +267,107 @@ footer {
     background: rgba(248, 113, 113, 0.12) !important;
     color: #ffffff !important;
 }
+
+.search-form {
+    display: flex;
+    gap: 12px;
+    margin: 20px 0 30px 0;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.search-form input,
+.search-form select,
+.search-form button {
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: none;
+    font-size: 15px;
+}
+
+.search-form input {
+    min-width: 220px;
+    background: #ffffff;
+    color: #111;
+}
+
+.search-form select {
+    background: #ffffff;
+    color: #111;
+}
+
+.search-form button {
+    background: #00e676;
+    color: #001b2e;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.search-form button:hover {
+    transform: translateY(-1px);
+    opacity: 0.95;
+}
+
+.account-page {
+    margin-top: 30px;
+}
+
+.account-box {
+    background: #10213a;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.review-item {
+    background: #0b1830;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.review-item a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #00e676;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.account-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 500px;
+}
+
+.account-form input {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.account-form button {
+    width: fit-content;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 8px;
+    background: #00e676;
+    color: #001b2e;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.success-message {
+    color: #00e676;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.error-message {
+    color: #ff6b6b;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
