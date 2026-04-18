@@ -25,7 +25,9 @@ if ($result_game->num_rows === 0) {
 $game = $result_game->fetch_assoc();
 
 $user_has_reviewed = false;
+$favorite_message = "";
 
+/* Check if logged in user already reviewed this game */
 if (isset($_SESSION["user_id"])) {
     $user_id = $_SESSION["user_id"];
 
@@ -39,21 +41,38 @@ if (isset($_SESSION["user_id"])) {
         $user_has_reviewed = true;
     }
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST" && !$user_has_reviewed) {
+    /* Add to favorites */
+    if (isset($_POST["add_favorite"])) {
+        $fav_stmt = $conn->prepare("INSERT IGNORE INTO favourites (user_id, game_id) VALUES (?, ?)");
+        $fav_stmt->bind_param("ii", $user_id, $game_id);
+        $fav_stmt->execute();
+
+        if ($fav_stmt->affected_rows > 0) {
+            $favorite_message = "Game added to favorites.";
+        } else {
+            $favorite_message = "This game is already in your favorites.";
+        }
+    }
+
+    /* Submit review */
+    if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["submit_review"]) && !$user_has_reviewed) {
         $rating = (int) $_POST["rating"];
         $comment = trim($_POST["comment"]);
 
-        $insert_sql = "INSERT INTO reviews (user_id, game_id, rating, comment)
-                       VALUES (?, ?, ?, ?)";
-        $stmt_insert = $conn->prepare($insert_sql);
-        $stmt_insert->bind_param("iiis", $user_id, $game_id, $rating, $comment);
-        $stmt_insert->execute();
+        if ($rating >= 1 && $rating <= 5 && !empty($comment)) {
+            $insert_sql = "INSERT INTO reviews (user_id, game_id, rating, comment)
+                           VALUES (?, ?, ?, ?)";
+            $stmt_insert = $conn->prepare($insert_sql);
+            $stmt_insert->bind_param("iiis", $user_id, $game_id, $rating, $comment);
+            $stmt_insert->execute();
 
-        header("Location: game.php?id=" . $game_id);
-        exit();
+            header("Location: game.php?id=" . $game_id);
+            exit();
+        }
     }
 }
 
+/* Average rating */
 $sql_avg = "SELECT AVG(rating) AS avg_rating FROM reviews WHERE game_id = ?";
 $stmt_avg = $conn->prepare($sql_avg);
 $stmt_avg->bind_param("i", $game_id);
@@ -61,12 +80,12 @@ $stmt_avg->execute();
 $result_avg = $stmt_avg->get_result();
 $data_avg = $result_avg->fetch_assoc();
 
+/* Reviews list */
 $sql_reviews = "SELECT reviews.*, users.username
                 FROM reviews
                 JOIN users ON reviews.user_id = users.id
                 WHERE game_id = ?
                 ORDER BY created_at DESC";
-
 $stmt_reviews = $conn->prepare($sql_reviews);
 $stmt_reviews->bind_param("i", $game_id);
 $stmt_reviews->execute();
@@ -74,7 +93,7 @@ $result_reviews = $stmt_reviews->get_result();
 ?>
 
 <div class="game-detail">
-   <img src="<?php echo htmlspecialchars($game['image']); ?>" alt="game">
+    <img src="<?php echo htmlspecialchars($game['image']); ?>" alt="game">
 
     <h2><?php echo htmlspecialchars($game['title']); ?></h2>
 
@@ -84,17 +103,25 @@ $result_reviews = $stmt_reviews->get_result();
     <p><strong>Publisher:</strong> <?php echo htmlspecialchars($game['publisher']); ?></p>
     <p><strong>Release Year:</strong> <?php echo htmlspecialchars($game['release_year']); ?></p>
     <p><strong>Platforms:</strong> <?php echo htmlspecialchars($game['platforms']); ?></p>
+
+    <?php if (!empty($data_avg["avg_rating"])): ?>
+        <p><strong>Average Rating:</strong> <?php echo round($data_avg["avg_rating"], 1); ?> ⭐</p>
+    <?php else: ?>
+        <p><strong>Average Rating:</strong> No ratings yet</p>
+    <?php endif; ?>
+
+    <?php if (isset($_SESSION["user_id"])): ?>
+        <form method="POST" class="game-actions">
+            <button type="submit" name="add_favorite">Add to Favorites</button>
+        </form>
+
+        <?php if (!empty($favorite_message)): ?>
+            <p style="margin-top: 10px; color: #00e676; font-weight: bold;">
+                <?php echo htmlspecialchars($favorite_message); ?>
+            </p>
+        <?php endif; ?>
+    <?php endif; ?>
 </div>
-
-
-
-
-<?php if (!empty($data_avg["avg_rating"])): ?>
-    <p style="max-width: 800px; margin: 20px auto;">
-        <strong>Average Rating:</strong>
-        <?php echo round($data_avg["avg_rating"], 1); ?> ⭐
-    </p>
-<?php endif; ?>
 
 <?php if (isset($_SESSION["user_id"])): ?>
     <?php if (!$user_has_reviewed): ?>
@@ -108,14 +135,14 @@ $result_reviews = $stmt_reviews->get_result();
                 <label>Comment</label>
                 <textarea name="comment" required></textarea>
 
-                <button type="submit">Submit Review</button>
+                <button type="submit" name="submit_review">Submit Review</button>
             </form>
         </div>
     <?php else: ?>
         <p style="max-width: 800px; margin: 20px auto;">You already reviewed this game.</p>
     <?php endif; ?>
 <?php else: ?>
-    <p style="max-width: 800px; margin: 20px auto;">Please <a href="login.php">login</a> to leave a review.</p>
+    <p style="max-width: 800px; margin: 20px auto;">Please <a href="login.php">login</a> to leave a review and manage favorites.</p>
 <?php endif; ?>
 
 <h3 style="max-width: 800px; margin: 20px auto;">Reviews</h3>
