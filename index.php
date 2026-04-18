@@ -48,7 +48,9 @@ if (!$result) {
     die("<p style='color:red; padding:20px;'>get_result failed.</p>");
 }
 
-
+echo "<p style='color:white; padding:20px;'>Debug: page loaded</p>";
+echo "<p style='color:white; padding:20px;'>Rows found: " . $result->num_rows . "</p>";
+?>
 
 <h2>Featured Games</h2>
 
