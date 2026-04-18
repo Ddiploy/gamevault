@@ -1,4 +1,7 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 include("config/db.php");
 include("includes/header.php");
 
@@ -25,20 +28,27 @@ $sql .= " ORDER BY RAND()";
 
 $stmt = $conn->prepare($sql);
 
-if (!empty($params)) {
-    $stmt->bind_param($types, ...$params);
+if (!$stmt) {
+    die("<p style='color:red; padding:20px;'>Prepare failed: " . htmlspecialchars($conn->error) . "</p>");
 }
 
-$stmt->execute();
+if (!empty($params)) {
+    if (!$stmt->bind_param($types, ...$params)) {
+        die("<p style='color:red; padding:20px;'>bind_param failed.</p>");
+    }
+}
+
+if (!$stmt->execute()) {
+    die("<p style='color:red; padding:20px;'>Execute failed: " . htmlspecialchars($stmt->error) . "</p>");
+}
+
 $result = $stmt->get_result();
-?>
-<?php
-echo "<p style='color:white; padding:20px;'>Debug: page loaded</p>";
 
 if (!$result) {
-    die("<p style='color:red; padding:20px;'>Query failed.</p>");
+    die("<p style='color:red; padding:20px;'>get_result failed.</p>");
 }
 
+echo "<p style='color:white; padding:20px;'>Debug: page loaded</p>";
 echo "<p style='color:white; padding:20px;'>Rows found: " . $result->num_rows . "</p>";
 ?>
 
