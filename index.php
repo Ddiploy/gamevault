@@ -32,6 +32,15 @@ if (!empty($params)) {
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
+<?php
+echo "<p style='color:white; padding:20px;'>Debug: page loaded</p>";
+
+if (!$result) {
+    die("<p style='color:red; padding:20px;'>Query failed.</p>");
+}
+
+echo "<p style='color:white; padding:20px;'>Rows found: " . $result->num_rows . "</p>";
+?>
 
 <h2>Featured Games</h2>
 
