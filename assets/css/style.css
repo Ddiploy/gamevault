@@ -94,7 +94,7 @@ nav ul li a {
 }
 
 .nav-menu a:hover {
-    background: rgba(56, 189, 248, 0.12);
+    background: rgba(201, 7, 7, 0.12);
     color: #ffffff;
     transform: translateY(-1px);
 }
