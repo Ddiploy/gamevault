@@ -458,3 +458,15 @@ footer {
         max-width: 100%;
     }
 }
+
+@media (max-width: 768px) {
+    #main-nav {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    #main-nav.nav-hidden {
+        opacity: 0;
+        transform: translateY(-20px);
+        pointer-events: none;
+    }
+}
