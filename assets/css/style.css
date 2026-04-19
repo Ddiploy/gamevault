@@ -576,3 +576,80 @@ nav {
         word-break: break-word;
     }
 }
+
+@media (max-width: 768px) {
+    header {
+        padding: 12px;
+    }
+
+    nav {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 12px !important;
+    }
+
+    .logo {
+        max-width: 160px !important;
+        height: auto !important;
+    }
+
+    .nav-menu {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        width: 100% !important;
+        gap: 8px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .nav-menu li {
+        width: 100% !important;
+        list-style: none !important;
+        margin: 0 !important;
+    }
+
+    .nav-menu li a,
+    .nav-menu li span {
+        display: block !important;
+        width: 100% !important;
+        padding: 8px 0 !important;
+        text-align: left !important;
+    }
+
+    .welcome-badge {
+        max-width: 100% !important;
+        word-break: break-word !important;
+    }
+
+    .search-form {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+    }
+
+    .search-form input,
+    .search-form select,
+    .search-form button {
+        width: 100% !important;
+    }
+
+    .game-grid {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+    }
+
+    .game-card {
+        width: 100% !important;
+    }
+
+    .game-card img {
+        width: 100% !important;
+        height: auto !important;
+        max-height: 320px !important;
+        object-fit: cover !important;
+    }
+}
