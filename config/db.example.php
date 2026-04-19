@@ -1,9 +1,9 @@
 <?php
 $host = "localhost";
-$user = "YOUR_DB_USER";
-$pass = "YOUR_DB_PASSWORD";
-$dbname = "YOUR_DB_NAME";
-// Im doing this to protect my password //
+$user = "u600791179_usr_H4UHOjk2";
+$pass = "Crakfamily99"; 
+$dbname = "u600791179_db_H4UHOjk2";
+
 $conn = new mysqli($host, $user, $pass, $dbname);
 
 if ($conn->connect_error) {
