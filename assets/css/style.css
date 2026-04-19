@@ -482,3 +482,7 @@ footer {
         pointer-events: none;
     }
 }
+
+header {
+    height: auto;
+}
