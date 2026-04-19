@@ -26,6 +26,29 @@ document.addEventListener("DOMContentLoaded", function () {
     window.addEventListener("resize", handleNavVisibility);
     handleNavVisibility();
 });
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const header = document.getElementById("main-header");
+    if (!header) return;
+
+    function handleHeaderVisibility() {
+        if (window.innerWidth <= 768) {
+            if (window.scrollY > 120) {
+                header.classList.add("header-hidden");
+            } else {
+                header.classList.remove("header-hidden");
+            }
+        } else {
+            header.classList.remove("header-hidden");
+        }
+    }
+
+    window.addEventListener("scroll", handleHeaderVisibility);
+    window.addEventListener("resize", handleHeaderVisibility);
+    handleHeaderVisibility();
+});
+</script>
 </script>
 </body>
 </html>

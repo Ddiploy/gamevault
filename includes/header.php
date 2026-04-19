@@ -13,7 +13,7 @@ if (session_status() === PHP_SESSION_NONE) {
 </head>
 <body>
 
-<header>
+<header id="main-header">
     <nav id="main-nav">
         <a href="index.php">
             <img src="assets/images/logo.png" alt="GameVault Logo" class="logo">

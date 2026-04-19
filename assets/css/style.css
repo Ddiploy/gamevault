@@ -470,3 +470,15 @@ footer {
         pointer-events: none;
     }
 }
+
+@media (max-width: 768px) {
+    #main-header {
+        transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    #main-header.header-hidden {
+        transform: translateY(-100%);
+        opacity: 0;
+        pointer-events: none;
+    }
+}
